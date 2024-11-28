@@ -22,7 +22,9 @@ export const Weather = () => {
                 wheather.isLoaded ? (
                     <Card.Body>
                     <Card.Title>
-                        Casablanca , MA <PositionSvg color={'rgba(255,255,255,0.7)'}/>
+                         {wheather.name}{' '}{wheather.sys.country}
+                        
+                        <PositionSvg color={'rgba(255,255,255,0.7)'}/>
                         <div className={styles.date}>
                             <div>
                                 <Moment format='llll' />
