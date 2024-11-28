@@ -2,8 +2,12 @@ import {Button, Form} from "react-bootstrap";
 import styles from  './SearchBar.module.scss'
 import { Autocomplete, TextField } from "@mui/material";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { resetDataWeather, setDataWheather } from "../WheatherStore/Features/Wheather/WheatherSlice";
 export const SearchBar = () => {
     const [cities, setCities] = useState([])
+    const [Unity, setUnity] = useState('metric')
+    const dispatch = useDispatch()
     const GEO_API_KEY =  process.env.REACT_APP_GEO_API_KEY
     const WHEATHER_API_KEY = process.env.REACT_APP_WEATHER_API
     console.log(WHEATHER_API_KEY)
@@ -22,11 +26,19 @@ export const SearchBar = () => {
     }
 
     const handelAutoCompliteChange = (e, value) => {
-        const { lat, lon } = value;
-        fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${WHEATHER_API_KEY}`)
+        
+        if(value != null){
+            const { lat, lon } = value;
+        fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&units=${Unity}&lon=${lon}&appid=${WHEATHER_API_KEY}`)
             .then((response) => response.json())
-            .then((json) => console.log(json))
+            .then((json) => {
+                const {clouds,main , sys, weather, name, wind} = json
+                dispatch(setDataWheather({clouds,main , sys, weather, name, wind}))
+            })
             .catch((error) => console.error("Error fetching weather data:", error));
+        }else{
+            dispatch(resetDataWeather())
+        }
     };
     
     return (  
